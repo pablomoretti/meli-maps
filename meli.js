@@ -2,15 +2,13 @@ var http = require('http');
 var rest = require('restler');
 var Promise = require('promise');
 
-var API_SEARCH = 'https://api.mercadolibre.com/sites/MLA/search?';
-
-var API_CITIES = 'https://api.mercadolibre.com/cities/';
+var API_BASE = 'https://api.mercadolibre.com';
 
 //http.globalAgent.maxSockets = 300
 
 exports.getCity = function(cityId){
 		return new Promise(function (resolve) {
-			rest.get(API_CITIES + cityId,{timeout: 30000}).on('complete', function(data) {
+			rest.get(API_BASE + '/cities/' + cityId,{timeout: 30000}).on('complete', function(data) {
 				if(data.geo_information){
 					resolve(data);
 				}
@@ -20,10 +18,10 @@ exports.getCity = function(cityId){
 		});
 }
 
-exports.search = function(query){
+exports.search = function(site,query){
 
 	var pTotal = new Promise(function (resolve) {
-		rest.get( API_SEARCH + 'q=' + query +'&limit=0').on('complete', function(data) {
+		rest.get( API_BASE + '/sites/' + site + '/search?q=' + query +'&limit=0').on('complete', function(data) {
 			resolve(data.paging.total);
 		});
 	});
@@ -40,7 +38,7 @@ exports.search = function(query){
 		for (var i = 0; i <= loops; i++) {
 
 			pResults = new Promise(function (resolve) {
-				rest.get(API_SEARCH + 'q=' + query +'&limit=200&offset=' +  (i * 200) ).on('complete', function(data) {
+				rest.get(API_BASE + '/sites/' + site + '/search?q=' + query +'&limit=200&offset=' +  (i * 200) ).on('complete', function(data) {
 					resolve(data.results.map(function(data){
 						return data;
 					}));
