@@ -1,14 +1,25 @@
 var meli = require('./meli.js');
 var Promise = require('promise');
 
-meli.search("MLA","fernet").then(function(items){
+var http = require('http');
+var rest = require('restler');
+
+console.log("longitude,latitude");
+
+meli.search("MCO","riego").then(function(items){
+
 	items.forEach(function(item){
-		 meli.getCity(item.address.city_id).then(function(data){
-			var location = data.geo_information.location;
+
+		var location = item.seller_address;
+
+		if(location.longitude && location.latitude){
 			console.log(location.longitude + "," + location.latitude);
-		});
+		}	
+
 	});
 });
+
+
 
 
 

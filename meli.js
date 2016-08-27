@@ -9,6 +9,8 @@ var API_BASE = 'https://api.mercadolibre.com';
 exports.getCity = function(cityId){
 		return new Promise(function (resolve) {
 			rest.get(API_BASE + '/cities/' + cityId,{timeout: 30000}).on('complete', function(data) {
+				
+				console.log(data);
 				if(data.geo_information){
 					resolve(data);
 				}
